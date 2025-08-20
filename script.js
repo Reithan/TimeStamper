@@ -44,12 +44,6 @@ function parseHuman(when, tz) {
   return Math.floor(dt.toSeconds());
 }
 
-function logReturn(returnVal) {
-    // in each command branch just before return
-    console.log('out', JSON.stringify(returnVal));      // should show {"type":4,"data":{...}}
-    return returnVal;
-}
-
 export default {
   async fetch(request, env) {
     if (request.method !== 'POST') return new Response('OK');
@@ -67,7 +61,7 @@ export default {
 
 
     if (ix.type === InteractionType.PING) {
-      return json(logReturn({ type: InteractionResponseType.PONG }));
+      return json({ type: InteractionResponseType.PONG });
     }
 
     if (ix.type === InteractionType.APPLICATION_COMMAND) {
@@ -77,28 +71,28 @@ export default {
       if (name === 'ts') {
         const style = opts.style ?? 'f';
         const epoch = Math.floor(Date.now() / 1000);
-        return json(logReturn(make(epoch, style)));
+        return json(make(epoch, style));
       }
 
       if (name === 'ts_convert') {
         try {
           const epoch = parseHuman(opts.when, opts.tz);
           const style = opts.style ?? 'f';
-          return json(logReturn(make(epoch, style)));
+          return json(make(epoch, style));
         } catch (e) {
-          return json(logReturn({
-            type: InteractionResponseType.ChannelMessageWithSource,
+          return json({
+            type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
             data: { content: `⚠️ ${e.message}`, flags: 64 }
-          }));
+          });
         }
       }
 
-      return json(logReturn({
-        type: InteractionResponseType.ChannelMessageWithSource,
+      return json({
+        type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
         data: { content: 'Unknown command', flags: 64 }
-      }));
+      });
     }
 
-    return logReturn(new Response('Unhandled', { status: 400 }));
+    return new Response('Unhandled', { status: 400 });
   }
 };
