@@ -4,7 +4,7 @@ import {
   verifyKey
 } from 'discord-interactions';
 // ↓ module-scope log (runs on cold start)
-console.log('CMWS=', InteractionResponseType.ChannelMessageWithSource, 'DEFER=', InteractionResponseType.DeferredChannelMessageWithSource);
+console.log('CMWS=', InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE, 'DEFER=', InteractionResponseType.DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE);
 import * as chrono from 'chrono-node';
 import { DateTime, IANAZone } from 'luxon';
 
@@ -15,7 +15,7 @@ const json = (data, status = 200) =>
   });
 
 const make = (epoch, style = 'f') => ({
-  type: InteractionResponseType.ChannelMessageWithSource,
+  type: InteractionResponseType.CHANNEL_MESSAGE_WITH_SOURCE,
   data: {
     content: `**Preview:** <t:${epoch}:${style}> • (<t:${epoch}:R>)\n**Copy:** \`<t:${epoch}:${style}>\``,
     flags: 64 // ephemeral
