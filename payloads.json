@@ -1,0 +1,38 @@
+[
+  {
+    "name": "ts",
+    "description": "Get a Discord dynamic timestamp for now",
+    "type": 1,
+    "integration_types": [1],
+    "contexts": [1, 2],
+    "options": [
+      {"name":"style","description":"t,T,d,D,f,F,R","type":3,"required":false,
+       "choices":[
+         {"name":"t (short time)","value":"t"},
+         {"name":"T (long time)","value":"T"},
+         {"name":"d (short date)","value":"d"},
+         {"name":"D (long date)","value":"D"},
+         {"name":"f (date+time)","value":"f"},
+         {"name":"F (full)","value":"F"},
+         {"name":"R (relative)","value":"R"}
+       ]}
+    ]
+  },
+  {
+    "name": "ts_convert",
+    "description": "Convert a human-readable time to a Discord timestamp",
+    "type": 1,
+    "integration_types": [1],
+    "contexts": [1, 2],
+    "options": [
+      {"name":"when","description":"e.g. \"Aug 21 2025 3pm PT\" or ISO","type":3,"required":true},
+      {"name":"style","description":"t,T,d,D,f,F,R","type":3,"required":false,
+       "choices":[
+         {"name":"t (short time)","value":"t"},{"name":"T (long time)","value":"T"},
+         {"name":"d (short date)","value":"d"},{"name":"D (long date)","value":"D"},
+         {"name":"f (date+time)","value":"f"},{"name":"F (full)","value":"F"},
+         {"name":"R (relative)","value":"R"}]},
+      {"name":"tz","description":"Fallback zone if input lacks one (e.g. America/Los_Angeles)","type":3,"required":false}
+    ]
+  }
+]

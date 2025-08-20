@@ -1,0 +1,54 @@
+# .github/workflows/deploy-bot.yml
+name: Deploy Discord Worker
+
+on:
+  push:
+    branches: [main]          # deploy after PRs merge to main
+  workflow_dispatch:          # allow manual runs
+    inputs:
+      register:
+        description: "Register slash commands after deploy"
+        type: boolean
+        default: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-bot
+      cancel-in-progress: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Build deps for your repo (needed for 'npm run register' script)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+
+      # --- OPTIONAL: push DISCORD_PUBLIC_KEY to Cloudflare as a Worker secret ---
+      # (Only needed the FIRST time or when rotating the key; otherwise omit.)
+      # - name: Set Cloudflare secret DISCORD_PUBLIC_KEY
+      #   if: ${{ secrets.DISCORD_PUBLIC_KEY != '' }}
+      #   run: echo -n "${{ secrets.DISCORD_PUBLIC_KEY }}" | npx wrangler secret put DISCORD_PUBLIC_KEY
+      #   env:
+      #     CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      #     CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+
+      # Deploy the Worker (uses wrangler from the action)
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          command: deploy
+
+      # Register slash commands (optional)
+      - name: Register slash commands
+        if: ${{ inputs.register || (secrets.DISCORD_TOKEN != '' && secrets.APPLICATION_ID != '') }}
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          APPLICATION_ID: ${{ secrets.APPLICATION_ID }}
+        run: npm run register
