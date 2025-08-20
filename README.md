@@ -12,11 +12,7 @@ Replies are **ephemeral** (visible only to you) and include both the tag and a r
 ## Quick Start (for users)
 
 1. **Install to your account**
-   Open:
-
-   ```
-   https://discord.com/oauth2/authorize?client_id=1407511264380457001&integration_type=1&scope=applications.commands
-   ```
+   Install the bot to your account via [this OAuth link](https://discord.com/oauth2/authorize?client_id=1407511264380457001&integration_type=1&scope=applications.commands).
 2. **Open a DM** with the app (App Launcher → your app).
 3. **Use the commands**
 
