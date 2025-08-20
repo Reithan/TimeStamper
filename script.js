@@ -3,7 +3,7 @@ import {
   InteractionResponseType,
   verifyKey
 } from 'discord-interactions';
-import chrono from 'chrono-node';
+import * as chrono from 'chrono-node';
 import { DateTime, IANAZone } from 'luxon';
 
 const json = (data, status = 200) =>
