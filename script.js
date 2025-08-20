@@ -3,6 +3,8 @@ import {
   InteractionResponseType,
   verifyKey
 } from 'discord-interactions';
+// ↓ module-scope log (runs on cold start)
+console.log('CMWS=', InteractionResponseType.ChannelMessageWithSource, 'DEFER=', InteractionResponseType.DeferredChannelMessageWithSource);
 import * as chrono from 'chrono-node';
 import { DateTime, IANAZone } from 'luxon';
 
@@ -65,7 +67,7 @@ export default {
 
 
     if (ix.type === InteractionType.PING) {
-      return logReturn(json({ type: InteractionResponseType.PONG }));
+      return json(logReturn({ type: InteractionResponseType.PONG }));
     }
 
     if (ix.type === InteractionType.APPLICATION_COMMAND) {
@@ -75,23 +77,23 @@ export default {
       if (name === 'ts') {
         const style = opts.style ?? 'f';
         const epoch = Math.floor(Date.now() / 1000);
-        return logReturn(json(make(epoch, style)));
+        return json(logReturn(make(epoch, style)));
       }
 
       if (name === 'ts_convert') {
         try {
           const epoch = parseHuman(opts.when, opts.tz);
           const style = opts.style ?? 'f';
-          return logReturn(json(make(epoch, style)));
+          return json(logReturn(make(epoch, style)));
         } catch (e) {
-          return logReturn(json({
+          return json(logReturn({
             type: InteractionResponseType.ChannelMessageWithSource,
             data: { content: `⚠️ ${e.message}`, flags: 64 }
           }));
         }
       }
 
-      return logReturn(json({
+      return json(logReturn({
         type: InteractionResponseType.ChannelMessageWithSource,
         data: { content: 'Unknown command', flags: 64 }
       }));
